@@ -3,7 +3,7 @@ import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from 'apollo-boost';
 
 const GET_TODOS = gql`
-  {
+  query {
     todos {
       data {
         _id
@@ -15,7 +15,7 @@ const GET_TODOS = gql`
 `;
 
 const ADD_TODO = gql`
-  mutation AddTodo($text: String!) {
+  mutation CreateATodo($text: String!) {
     createTodo(data: {text: $text, completed: false}) {
       _id
       text
@@ -25,6 +25,23 @@ const ADD_TODO = gql`
 `;
 
 function App() {
+  const {loading, error, data} = useQuery(GET_TODOS);
+  const [addTodo] = useMutation(ADD_TODO, {
+    update(
+      cache,
+      {
+        data: {createTodo},
+      },
+    ) {
+      const {todos} = cache.readQuery({query: GET_TODOS});
+      todos.data = [createTodo, ...todos.data];
+      cache.writeQuery({
+        query: GET_TODOS,
+        data: {todos},
+      });
+    },
+  });
+
   const [inputs, setInputs] = useState({
     text: '',
   });
@@ -37,21 +54,14 @@ function App() {
     }));
   };
 
-  const {loading, error, data} = useQuery(GET_TODOS);
-  const [addTodo] = useMutation(ADD_TODO, {
-    update(
-      cache,
-      {
-        data: {addTodo},
-      },
-    ) {
-      const {todos} = cache.readQuery({query: GET_TODOS});
-      cache.writeQuery({
-        query: GET_TODOS,
-        data: {todos: todos.concat([addTodo])},
-      });
-    },
-  });
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addTodo({variables: {text: inputs.text}});
+    setInputs((inputs) => ({
+      ...inputs,
+      text: '',
+    }));
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -59,7 +69,7 @@ function App() {
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor='todo'>ADD TODO</label>
         <input
           type='text'
@@ -67,6 +77,7 @@ function App() {
           value={inputs.text}
           onChange={handleChange}
         />
+        <button type='submit'>ADD TODO</button>
       </form>
 
       {data.todos.data.map(({_id, text, completed}) => (
