@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from 'apollo-boost';
 
@@ -25,6 +25,18 @@ const ADD_TODO = gql`
 `;
 
 function App() {
+  const [inputs, setInputs] = useState({
+    text: '',
+  });
+
+  const handleChange = (event) => {
+    event.persist();
+    setInputs((inputs) => ({
+      ...inputs,
+      [event.target.id]: event.target.value,
+    }));
+  };
+
   const {loading, error, data} = useQuery(GET_TODOS);
   const [addTodo] = useMutation(ADD_TODO, {
     update(
@@ -47,6 +59,16 @@ function App() {
 
   return (
     <div>
+      <form>
+        <label htmlFor='todo'>ADD TODO</label>
+        <input
+          type='text'
+          id='text'
+          value={inputs.text}
+          onChange={handleChange}
+        />
+      </form>
+
       {data.todos.data.map(({_id, text, completed}) => (
         <div key={_id}>{text}</div>
       ))}
