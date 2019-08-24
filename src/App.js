@@ -23,8 +23,8 @@ function App() {
 
   return (
     <div>
-      {data.todos.data.map((todo) => (
-        <div>{todo.text}</div>
+      {data.todos.data.map(({_id, text, completed}) => (
+        <div key={_id}>{text}</div>
       ))}
     </div>
   );

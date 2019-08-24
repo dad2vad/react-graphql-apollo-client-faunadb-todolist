@@ -5,9 +5,9 @@ import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from '@apollo/react-hooks';
 
 const client = new ApolloClient({
-  uri: 'https://graphql.fauna.com/graphql',
+  uri: `${process.env.REACT_APP_DB_URI}`,
   headers: {
-    "Authorization": "Bearer fnADWlQxdbACCqUvRjC6-5EG6tNI-OkrvFURk_CB",
+    authorization: `Bearer ${process.env.REACT_APP_DB_BEARER_TOKEN}`,
   },
 });
 
