@@ -24,6 +24,16 @@ const ADD_TODO = gql`
   }
 `;
 
+const DELETE_TODO = gql`
+  mutation DeleteATodo($id: ID!) {
+    deleteTodo(id: $id) {
+      _id
+      text
+      completed
+    }
+  }
+`;
+
 function App() {
   const {loading, error, data} = useQuery(GET_TODOS);
   const [addTodo] = useMutation(ADD_TODO, {
