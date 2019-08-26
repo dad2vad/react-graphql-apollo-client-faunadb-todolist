@@ -51,6 +51,21 @@ function App() {
       });
     },
   });
+  const [deleteTodo] = useMutation(DELETE_TODO, {
+    update(
+      cache,
+      {
+        data: {deleteTodo},
+      },
+    ) {
+      const {todos} = cache.readQuery({query: GET_TODOS});
+      todos.data = [...todos.data].filter(todo => todo.id !== deleteTodo)
+      cache.writeQuery({
+        query: GET_TODOS,
+        data: {todos},
+      });
+    },
+  });
 
   const [inputs, setInputs] = useState({
     text: '',
@@ -72,6 +87,10 @@ function App() {
       text: '',
     }));
   };
+
+  const handleDelete = (event) => {
+    delete
+  }
 
   if (loading) return <div>Loading...</div>;
 
