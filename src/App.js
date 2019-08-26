@@ -59,7 +59,7 @@ function App() {
       },
     ) {
       const {todos} = cache.readQuery({query: GET_TODOS});
-      todos.data = [...todos.data].filter(todo => todo.id !== deleteTodo)
+      todos.data = [...todos.data].filter((todo) => todo._id !== deleteTodo._id);
       cache.writeQuery({
         query: GET_TODOS,
         data: {todos},
@@ -88,9 +88,9 @@ function App() {
     }));
   };
 
-  const handleDelete = (event) => {
-    delete
-  }
+  const handleDelete = (id) => {
+    deleteTodo({variables: {id}});
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -110,7 +110,10 @@ function App() {
       </form>
 
       {data.todos.data.map(({_id, text, completed}) => (
-        <div key={_id}>{text}</div>
+        <div key={_id}>
+          {text}
+          <button onClick={() => handleDelete(_id)}>delete</button>
+        </div>
       ))}
     </div>
   );
