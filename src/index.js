@@ -5,9 +5,9 @@ import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from '@apollo/react-hooks';
 
 const client = new ApolloClient({
-  uri: `${process.env.REACT_APP_DB_URI}`,
+  uri: `${process.env.REACT_APP_FAUNADB_URL}`,
   headers: {
-    authorization: `Bearer ${process.env.REACT_APP_DB_BEARER_TOKEN}`,
+    authorization: `Bearer ${process.env.REACT_APP_FAUNADB_TOKEN}`,
   },
 });
 

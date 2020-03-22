@@ -4,32 +4,32 @@ import {gql} from 'apollo-boost';
 
 const GET_TODOS = gql`
   query {
-    todos {
+    getTodos {
       data {
         _id
-        text
-        completed
+        task
+        isCompleted
       }
     }
   }
 `;
 
 const ADD_TODO = gql`
-  mutation CreateATodo($text: String!) {
-    createTodo(data: {text: $text, completed: false}) {
+  mutation createTodo($task: String!) {
+    createTodo(data: {task: $task, isCompleted: false}) {
       _id
-      text
-      completed
+      task
+      isCompleted
     }
   }
 `;
 
 const DELETE_TODO = gql`
-  mutation DeleteATodo($id: ID!) {
+  mutation deleteTodo($id: ID!) {
     deleteTodo(id: $id) {
       _id
-      text
-      completed
+      task
+      isCompleted
     }
   }
 `;
@@ -43,11 +43,11 @@ function App() {
         data: {createTodo},
       },
     ) {
-      const {todos} = cache.readQuery({query: GET_TODOS});
-      todos.data = [createTodo, ...todos.data];
+      const {getTodos} = cache.readQuery({query: GET_TODOS});
+      getTodos.data = [createTodo, ...getTodos.data];
       cache.writeQuery({
         query: GET_TODOS,
-        data: {todos},
+        data: {getTodos},
       });
     },
   });
@@ -58,17 +58,17 @@ function App() {
         data: {deleteTodo},
       },
     ) {
-      const {todos} = cache.readQuery({query: GET_TODOS});
-      todos.data = [...todos.data].filter((todo) => todo._id !== deleteTodo._id);
+      const {getTodos} = cache.readQuery({query: GET_TODOS});
+      getTodos.data = [...getTodos.data].filter((todo) => todo._id !== deleteTodo._id);
       cache.writeQuery({
         query: GET_TODOS,
-        data: {todos},
+        data: {getTodos},
       });
     },
   });
 
   const [inputs, setInputs] = useState({
-    text: '',
+    task: '',
   });
 
   const handleChange = (event) => {
@@ -81,10 +81,10 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addTodo({variables: {text: inputs.text}});
+    addTodo({variables: {task: inputs.task}});
     setInputs((inputs) => ({
       ...inputs,
-      text: '',
+      task: '',
     }));
   };
 
@@ -102,16 +102,16 @@ function App() {
         <label htmlFor='todo'>ADD TODO</label>
         <input
           type='text'
-          id='text'
-          value={inputs.text}
+          id='task'
+          value={inputs.task}
           onChange={handleChange}
         />
         <button type='submit'>ADD TODO</button>
       </form>
 
-      {data.todos.data.map(({_id, text, completed}) => (
+      {data.getTodos.data.map(({_id, task, isCompleted}) => (
         <div key={_id}>
-          {text}
+          {task}
           <button onClick={() => handleDelete(_id)}>delete</button>
         </div>
       ))}
