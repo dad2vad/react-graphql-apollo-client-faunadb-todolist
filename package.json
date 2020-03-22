@@ -1,6 +1,6 @@
 {
-  "name": "apollo-client-faunadb-todolist",
-  "version": "0.1.0",
+  "name": "react-apollo-client-faunadb-todolist",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.0.1",

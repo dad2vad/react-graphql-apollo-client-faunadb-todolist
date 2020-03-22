@@ -8,4 +8,4 @@ Most difficult part was the update cache function in the useMutation hook using 
 
 Cool learning project using FaunaDB!
 
-Live Demo: [https://affectionate-goldstine-56f2c4.netlify.com/](https://affectionate-goldstine-56f2c4.netlify.com/)
+Live Demo: [https://react-graphql-apollo-client-faunadb-todolist.netlify.com/](https://react-graphql-apollo-client-faunadb-todolist.netlify.com/)
